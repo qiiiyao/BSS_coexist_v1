@@ -1,0 +1,30 @@
+model{
+  
+  for (i in 1: nyear){
+    a[i] ~ dnorm(0,.001) 
+  }
+  
+  b_i ~ dnorm(0,.001) 
+  b_j ~ dnorm(0,.001) 
+  b_o ~ dnorm(0,.001) 
+  tau ~ dgamma(1.0e-3,1.0e-3)
+  r ~ dnorm(0,.001)I(0,)  #lower = 0
+  
+  sigmaplot~dunif(0,.1)
+  tauplot<-sqrt(1/(sigmaplot*sigmaplot))
+  
+  for(i in 1:10){
+    c[i] ~ dnorm(0,tauplot)
+    
+  }
+  
+  for(i in 1:nsite){
+    
+    for(t in 1:nyear){
+      growth.dat[i,t]~dnorm(mu[i,t],tau)
+      
+      mu[i,t] = r-b_i*focalcover[i,t]-b_j*extcover[i,t]-b_o*othercover[i,t]+c[Fieldnum[i]]+a[t]
+    }
+  }
+  
+}

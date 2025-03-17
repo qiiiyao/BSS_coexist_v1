@@ -1,0 +1,137 @@
+//NDDM (the Ricker model) & RIM joint model (permit positive interaction!)///
+// modified from Bimler_et_al_2023_MEE
+data {
+  int<lower=1> S;          // total number of focal species (s in the manuscript) 
+  int<lower=1> N;          // total number of observations (rows in model matrix) (n in the manuscript)
+  int<lower=0> T;          // total number of interaction partners (columns in model matrix) (t in the manuscript)
+  int<lower=0> I;          // total number of identifiable interactions 
+  
+  array[N] int species_ID;   // index matching observations to focal species
+  array[N] real perform;      // response variable: per captia growth rate (in the manuscript)
+    
+  array[I] int icol;  // indices matching pairwise inferrable to location in interaction matrix
+  array[I] int irow;  
+  //int<lower=0> ftime; // number of years in our data
+  int<lower=0> time_diff[N]; // year difference in our data
+  matrix[N,T] X;         // neighbour abundances (the model matrix)
+  //array[N] int time; // years in our data
+} 
+
+
+transformed data {
+  // Define transformed data variables here
+  vector[N] log_perform; // Example transformation: Log-transform of observations
+
+  // Compute the transformations
+  for (n in 1:N) {
+    log_perform[n] = log(perform[n]);
+  }
+}
+
+parameters {
+  
+  vector<lower=0>[S] gamma_i;    // species-specific intrinsic growth rate (must positive) 
+    
+  vector<lower=0>[S] sigma; // species-specific error
+  real<lower=-1, upper=1> phi_ri; // AR(1) coefficient
+  vector[N] epsilon_ri; // Error terms for ARMA process
+  real<lower=-1, upper=1> phi_ndd; // AR(1) coefficient
+  vector[N] epsilon_ndd; // Error terms for ARMA process
+     
+  vector[I] beta_ij;     // vector of interactions which are inferrable by the NDDM 
+  //vector[ftime] ran_t;   // vector of random time intercepts
+  real<lower=0> weight;    // weighting value controlling the average strength of interactions (must be positive)
+  unit_vector[S] response; // species-specific effect parameter (res in the manuscript but without weight)
+  unit_vector[T] effect;   // species-specific effect parameter (eff in the manuscript)
+
+} 
+
+transformed parameters {
+  
+  // transformed parameters constructed from parameters above
+ 
+  vector[N] mu;              // the RIM linear predictor for perform (here per captia growth rate)
+  vector[N] mu2;             // the joint model linear predictor for perform (here per captia growth rate)
+  
+  matrix[S, T] ri_betaij;   // interaction matrix for response - impact estimates (res*eff in the manuscript)
+  matrix[S, T] ndd_betaij;  // interaction matrix for joint model interaction estimates (alpha in the manuscript)
+  
+  vector[N] resid_ri; // Residuals
+  vector[N] resid_ndd; // Residuals
+  
+  // get RIM interactions
+  ri_betaij = weight * response * effect';  // the apostrophe transposes the effect vector
+   
+  // Estimate response-impact interactions
+  for(n in 1:N) {
+
+       mu[n] = (gamma_i[species_ID[n]] - dot_product(X[n], ri_betaij[species_ID[n], ]))*time_diff[n];  
+  }
+  
+  // Residuals for ARMA process
+  resid_ri[1] = log_perform[1] - mu[1]; // Initialize the first residual
+  for (n in 2:N) {
+    resid_ri[n] = log_perform[n] - mu[n] - phi_ri * resid_ri[n-1] - epsilon_ri[n-1];
+  }
+  
+  // NDDM estimates identifiable interactions, and uses RIM estimates when non-identifiable:
+  ndd_betaij = ri_betaij; // initialise nddm interaction matrix to rim estimates
+  // match identifiable interactions parameters to the correct position in the interaction matrix
+  for(i in 1:I) {
+    ndd_betaij[irow[i], icol[i]] = beta_ij[i];
+  }
+
+  // estimate identifiable interactions
+  for(n in 1:N) {
+
+        mu2[n] = (gamma_i[species_ID[n]] - dot_product(X[n], ndd_betaij[species_ID[n], ]))*time_diff[n];  
+  
+  }
+  
+  
+  // Residuals for ARMA process
+  resid_ndd[1] = log_perform[1] - mu2[1]; // Initialize the first residual
+  for (n in 2:N) {
+    resid_ndd[n] = log_perform[n] - mu2[n] - phi_ndd * resid_ndd[n-1] - epsilon_ndd[n-1];
+  }
+   
+} 
+
+model {
+
+  // priors
+  gamma_i ~ cauchy(0, 10);   // prior for the intercept following Gelman 2008
+  sigma ~ cauchy(0, 1); 
+  beta_ij ~ normal(0, 1);    // prior for interactions inferred by the NDDM
+  weight ~ normal(0, 10); // constrained by parameter definition to be positive
+  phi_ri ~ uniform(-1, 1);
+  epsilon_ri ~ normal(0, 1);
+  phi_ndd ~ uniform(-1, 1);
+  epsilon_ndd ~ normal(0, 1);
+  //ran_t ~ normal(0, 1);
+  // no prior needed for response or effect as we can use the default prior for the unit_vector
+
+  // maximising the likelihood for the joint model 
+  for(n in 1:N) {
+  
+    // maximise the likelihood of the RIM for all observations
+    log_perform[n] ~ normal(mu[n], sigma[species_ID[n]]);
+    // maximise the likelihood of the NDDM over identifiable interactions
+    target += normal_lpdf(log_perform[n] | mu2[n], sigma[species_ID[n]]);
+    
+  }
+  
+}
+
+generated quantities {
+
+  vector[N] log_lik_rim;	// log-likelihood for the RIM
+  vector[N] log_lik_nddm;	// log-likelihood for the joint model
+  
+  for(n in 1:N) {	
+    log_lik_rim[n] = normal_lpdf(log_perform[n] | mu[n], sigma[species_ID[n]]);
+	
+    log_lik_nddm[n] = normal_lpdf(log_perform[n] | mu2[n], sigma[species_ID[n]]);
+  }
+  
+}

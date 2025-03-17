@@ -1,0 +1,50 @@
+Sender: LSF System <lsfadmin@c178>
+Subject: Job 38046: <null6> in cluster <platform> Exited
+
+Job <null6> was submitted from host <login02> by user <shpli3> in cluster <platform> at Tue Sep 17 11:40:38 2024
+Job was executed on host(s) <20*c178>, in queue <normal>, as user <shpli3> in cluster <platform> at Tue Sep 17 11:41:06 2024
+</data/home/shpli3> was used as the home directory.
+</data/home/shpli3/R_projects/BSS_exclude_tree_raw/code/fit/fit_plot_top50_ages1_35_model_comparison/null> was used as the working directory.
+Started at Tue Sep 17 11:41:06 2024
+Terminated at Tue Sep 17 12:15:54 2024
+Results reported at Tue Sep 17 12:15:54 2024
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/sh 
+# -- Name of the job -- 
+#BSUB -J null6
+# -- specify queue – 
+#BSUB -q normal 
+# -- number of processors -- 
+#BSUB -n 20
+# --specify that the cores MUST BE on a single host! -- 
+#BSUB -R "span[hosts=1]" 
+# --Specify the output and error file. %J is the job-id -- 
+# -- -o and -e mean append, -oo and -eo mean overwrite -- 
+cd "/data/home/shpli3/R_projects/BSS_exclude_tree_raw/code/fit/fit_plot_top50_ages1_35_model_comparison/null"
+#BSUB -oo %J.Rout 
+mpirun -np 32 /data/apps/R-4.2.2/lib64/R/bin/R CMD BATCH --no-save 6.fit.r
+
+------------------------------------------------------------
+
+TERM_OWNER: job killed by owner.
+Exited with signal termination: 9.
+
+Resource usage summary:
+
+    CPU time :                                   3725.00 sec.
+    Max Memory :                                 46288 MB
+    Average Memory :                             34270.59 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   12 MB
+    Max Processes :                              2047
+    Max Threads :                                2189
+    Run time :                                   2086 sec.
+    Turnaround time :                            2116 sec.
+
+The output (if any) follows:
+

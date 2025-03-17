@@ -1,0 +1,28 @@
+"0","
+merged_data_3_wide = merged_data_3_wide.reset_index()
+merged_data_3_wide.iloc[1]    
+
+"
+"1","species
+YEARID              1.0
+FIELDID             1.0
+PLOTID              2.0
+AGE                 1.0
+YEAR             1958.0
+                  ...  
+Vitis_riparia       NaN
+Vitis_sp.           NaN
+Vitis_vulpina       NaN
+nan_nan             NaN
+unk_rosette         NaN
+Name: 1, Length: 456, dtype: float64
+"
+"0","merged_data_3_wide.to_csv('D:/R projects/BSS/data/BSS_data_2023/community_data_wide.csv',"
+"0","                          index=True)  # Includes the index"
+"0","merged_data_3.to_csv('D:/R projects/BSS/data/BSS_data_2023/community_data_long.csv', index=True)  # Includes the index"
+"0",""
+"0","fields.to_csv('D:/R projects/BSS/data/BSS_data_2023/fields.csv', index=True)  # Includes the index"
+"0",""
+"0","trait.to_csv('D:/R projects/BSS/data/BSS_data_2023/traits.csv', index=True)  # Includes the index"
+"0",""
+"0",""

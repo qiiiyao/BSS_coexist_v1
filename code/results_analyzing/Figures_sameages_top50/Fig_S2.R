@@ -1,0 +1,305 @@
+############### Fast Start ####################
+rm(list = ls())
+load("results/fit_results/BSS_exculde_trees_raw/plot_sameages_top40/inter_all_c_alltime.rdata")
+inter_all_c_alltime_top40 = inter_all_c_alltime
+load("results/fit_results/BSS_exculde_trees_raw/plot_sameages_top30/inter_all_c_alltime.rdata")
+inter_all_c_alltime_top30 = inter_all_c_alltime
+load("results/fit_results/BSS_exculde_trees_raw/plot_sameages_top30_early_suc/inter_all_c_alltime.rdata")
+inter_all_c_alltime_top30_early_suc = inter_all_c_alltime
+
+inter_all_c_alltime_top30$select_std = 'top30'
+inter_all_c_alltime_top40$select_std = 'top40'
+inter_all_c_alltime_top30_early_suc$select_std = 'top30_early_suc'
+
+inter_all_c_alltime = rbind(inter_all_c_alltime_top30, inter_all_c_alltime_top40,
+                            inter_all_c_alltime_top30_early_suc)
+
+rm(list = c('inter_all_c_alltime_top40', 'inter_all_c_alltime_top30',
+            'inter_all_c_alltime_top30_early_suc'))
+
+### load packages
+library(dplyr)
+library(betareg)
+library(stringr)
+library(data.table)
+library(ape)
+library(devEMF)
+library(reticulate)
+inter_all_c = inter_all_c_alltime
+
+## Functions for plot 
+theme_for_coe_plot = function(x){
+  ggplot2::theme_test() + 
+    theme(legend.position = c(0.11, 0.76),
+          legend.background = element_blank(),
+          legend.key = element_blank(),
+          text = element_text(family = 'Arial'),
+          axis.title = element_text(face="bold"),
+          axis.title.x = element_text(margin = margin(t = 0.5, r = 0,
+                                                      b = 0, l = 0,
+                                                      unit = "cm")),
+          axis.title.y = element_text(margin = margin(t = 0, r = 1,
+                                                      b = 0, l = 0,
+                                                      unit = "cm")),
+          plot.margin = margin(t = 0.2, r = 0.2, b = 0.5, l = 0.2, 
+                               unit = "cm"))
+}
+
+# get the abs value of lgfd
+inter_all_c$ablgfd = inter_all_c$lgfd
+inter_all_c$ablgfd[inter_all_c$ablgfd < 0] = inter_all_c$ablgfd[inter_all_c$ablgfd < 0]*-1
+
+#### Check the correlation between nd and fd
+cor.test(inter_all_c$nd, inter_all_c$ablgfd) 
+## Full data but corr coeff just 0.13
+## correlation
+#plot(inter_all_c$nd, inter_all_c$ablgfd)
+
+## Add stage introduce
+inter_all_c$intro_i = 1
+inter_all_c$intro_j = 1
+inter_all_c[inter_all_c$stage_i == 'native',]$intro_i = 0
+inter_all_c[inter_all_c$stage_j == 'native',]$intro_j = 0
+
+inter_all_c$stage_ij_estab = inter_all_c$stage_ij
+inter_all_c$stage_ij_domin = inter_all_c$stage_ij
+
+inter_all_c$stage_i_estab = 'native'
+inter_all_c$stage_j_estab = 'native'
+inter_all_c[inter_all_c$intro_i == 1&
+              inter_all_c$estab_i == 0,]$stage_i_estab = 'intro.noestab'
+inter_all_c[inter_all_c$intro_i == 1&
+              inter_all_c$estab_i == 1,]$stage_i_estab = 'intro.estab'
+inter_all_c[inter_all_c$intro_j == 1&
+              inter_all_c$estab_j == 0,]$stage_j_estab = 'intro.noestab'
+inter_all_c[inter_all_c$intro_j == 1&
+              inter_all_c$estab_j == 1,]$stage_j_estab = 'intro.estab'
+inter_all_c$stage_ij_estab = paste(inter_all_c$stage_i_estab,
+                                   inter_all_c$stage_j_estab,
+                                   sep = '_')
+
+inter_all_c$stage_i_domin = 'native'
+inter_all_c$stage_j_domin = 'native'
+inter_all_c[inter_all_c$intro_i == 1&
+              inter_all_c$estab_i == 1&
+              inter_all_c$domin_i == 0,]$stage_i_domin = 'estab.nodomin'
+inter_all_c[inter_all_c$intro_i == 1&
+              inter_all_c$estab_i == 1&
+              inter_all_c$domin_i == 1,]$stage_i_domin = 'estab.domin'
+inter_all_c[inter_all_c$intro_j == 1&
+              inter_all_c$estab_j == 1&
+              inter_all_c$domin_j == 0,]$stage_j_domin = 'estab.nodomin'
+inter_all_c[inter_all_c$intro_j == 1&
+              inter_all_c$estab_j == 1&
+              inter_all_c$domin_j == 1,]$stage_j_domin = 'estab.domin'
+inter_all_c$stage_ij_domin = paste(inter_all_c$stage_i_domin,
+                                   inter_all_c$stage_j_domin,
+                                   sep = '_')
+
+inter_all_c = inter_all_c %>% relocate(intro_i, .after = stage_ij) %>% 
+  relocate(intro_j, .after = intro_i) %>% 
+  relocate(stage_ij_estab, .after = stage_ij) %>% 
+  relocate(stage_i_estab, .after = stage_ij) %>% 
+  relocate(stage_j_estab, .after = stage_i_estab) %>% 
+  relocate(stage_ij_domin, .after = stage_ij_estab) %>% 
+  relocate(stage_i_domin, .after = stage_ij_estab) %>% 
+  relocate(stage_j_domin, .after = stage_i_domin)
+
+### Draw the coexistence plot
+library(lme4)
+library(lmerTest)
+library(dplyr)
+library(ggplot2)
+library(ggpubr)
+library(ggeffects)
+library(stringr)
+library(viridis)
+source('code/function/plot_func.R')
+
+
+########## Stage split two parts: estab noestab domin nodomin ##########
+#### just mean and sd of raw data ####
+inter_all_forestab = inter_all_c %>%
+  filter(stage_ij_estab %in% c("intro.estab_native",
+                               "intro.noestab_native"))
+
+spss.f = function(x) log10(1-x)
+x = seq(-1, 1, 0.001)
+spss.ff = function(x) -log10(1-x)
+
+length(unique(inter_all_forestab$sp_pair))
+length(unique(inter_all_forestab$species_i))
+length(unique(inter_all_forestab$species_j))
+
+inter_all_forestab_msd = inter_all_forestab %>% 
+  group_by(select_std,stage_ij_estab) %>% summarise_at(vars(nd, lgfd),
+                                            c(mean, sd), na.rm = T)
+
+colnames(inter_all_forestab_msd) = c('select_std',
+                                     'stage', 'nd_mean',
+                                     'lgfd_mean', 'nd_sd',
+                                     'lgfd_sd')
+inter_all_forestab_msd$select_std = factor(inter_all_forestab_msd$select_std,
+                                              levels = c('top30',
+                                                        'top40',
+                                                        'top30_early_suc'))
+dat_text_est = data.frame(
+  label = c("Establishment", " ", " "),
+  select_std = c("top30", "top40", "top30_early_suc")
+)
+dat_text_est$select_std = factor(dat_text_est$select_std,
+                                 levels = c('top30',
+                                            'top40',
+                                            'top30_early_suc'))
+
+(Fig.S2_compare_estab_original = ggplot(NULL) +
+    geom_pointrange(data = inter_all_forestab_msd,
+                    mapping = aes(x = nd_mean,y = lgfd_mean,
+                                  ymin = lgfd_mean-lgfd_sd,
+                                  ymax = lgfd_mean+lgfd_sd,
+                                  color = stage,
+                                  shape = stage),
+                    alpha = 1.2
+                    ,fatten = 8,linewidth = 0.8
+    )+
+    geom_pointrange(data = inter_all_forestab_msd,
+                    mapping = aes(x = nd_mean,y = lgfd_mean,
+                                  xmin = nd_mean-nd_sd,
+                                  xmax = nd_mean+nd_sd,
+                                  color = stage,
+                                  shape = stage),
+                    alpha = 1.2
+                    ,fatten = 8,linewidth = 0.8
+    )+
+    scale_color_manual(values = c('black',
+                                  'red'),
+                       labels = c("intro.estab_native" = "Successful",
+                                  "intro.noestab_native" = "Failed"),
+                       name = ' ')+
+    scale_shape_manual(values = c(16,1),
+                       labels = c("intro.estab_native" = "Successful",
+                                  "intro.noestab_native" = "Failed"),
+                       name = ' ')+
+    scale_x_continuous(limits=c(0, 0.75)) +
+    scale_y_continuous(limits=c(-0.35, 0.35)) +
+    geom_hline(yintercept=0, linetype="dashed", linewidth=0.3) +
+    geom_vline(xintercept=0, linetype="dashed", linewidth=0.3) +
+    labs(x = 'Niche difference (ND)', 
+         y = 'Relative Fitness difference (RFD)') +
+    stat_function(fun=spss.f, colour="black", linewidth = 0.3)+
+    stat_function(fun=spss.ff, colour="black", linewidth = 0.3)+
+    geom_text(data = dat_text_est,
+      mapping = aes(x = 0.15, y = 0.3, label = label),
+      fontface = 'bold'
+    ) + 
+    guides(colour=guide_legend(title=NULL,
+                               override.aes = list(linewidth = 0.3),
+                               family = 'Arial'),
+           shape=guide_legend(title=NULL,
+                              family = 'Arial')) +
+    facet_wrap(~select_std,
+               labeller=as_labeller(c("top30"="Top30",
+                                      "top40"="Top40",
+                                      "top30_early_suc" = "Top30_early_succession")),
+               nrow = 3, ncol = 1)+
+    theme_for_coe_plot()
+  )
+
+
+inter_all_fordomin = inter_all_c %>%
+  filter(stage_ij_domin %in% c("estab.domin_native",
+                               "estab.nodomin_native"))
+
+inter_all_fordomin_msd = inter_all_fordomin %>% 
+  group_by(select_std,stage_ij_domin) %>% summarise_at(vars(nd, lgfd),
+                                            c(mean, sd), na.rm = T)
+
+colnames(inter_all_fordomin_msd) = c('select_std','stage', 'nd_mean',
+                                     'lgfd_mean', 'nd_sd',
+                                     'lgfd_sd')
+inter_all_fordomin_msd$select_std = factor(inter_all_fordomin_msd$select_std,
+                                           levels = c('top30',
+                                                      'top40',
+                                                      'top30_early_suc'))
+dat_text_dom = data.frame(
+  label = c("Dominance", " ", " "),
+  select_std = c("top30", "top40", "top30_early_suc")
+)
+dat_text_dom$select_std = factor(dat_text_dom$select_std,
+                                 levels = c('top30',
+                                            'top40',
+                                            'top30_early_suc'))
+
+(Fig.S2_compare_domin_original = ggplot(NULL) +
+    geom_pointrange(data = inter_all_fordomin_msd,
+                    mapping = aes(x = nd_mean,y = lgfd_mean,
+                                  ymin = lgfd_mean-lgfd_sd,
+                                  ymax = lgfd_mean+lgfd_sd,
+                                  color = stage,
+                                  shape = stage)
+                    ,fatten = 8,linewidth = 0.8
+    )+
+    geom_pointrange(data = inter_all_fordomin_msd,
+                    mapping = aes(x = nd_mean,y = lgfd_mean,
+                                  xmin = nd_mean-nd_sd,
+                                  xmax = nd_mean+nd_sd,
+                                  color = stage,
+                                  shape = stage)
+                    ,fatten = 8,linewidth = 0.8
+    )+
+    scale_color_manual(values = c('black',
+                                  'red'),
+                       labels = c("estab.domin_native" = "Successful",
+                                  "estab.nodomin_native" = "Failed"),
+                       name = ' ')+
+    scale_shape_manual(values = c(16,1),
+                       labels = c("estab.domin_native" = "Successful",
+                                  "estab.nodomin_native" = "Failed"),
+                       name = ' ')+
+    #scale_color_brewer(palette="Set2")+
+    scale_x_continuous(limits=c(0, 0.75)) +
+    scale_y_continuous(limits=c(-0.35, 0.35)) +
+    geom_hline(yintercept=0, linetype="dashed", linewidth=0.3) +
+    geom_vline(xintercept=0, linetype="dashed", linewidth=0.3) +
+    labs(x = 'Niche difference (ND)', 
+         y = '  ') +
+    stat_function(fun=spss.f, colour="black", linewidth = 0.3)+
+    stat_function(fun=spss.ff, colour="black", linewidth = 0.3)+
+    geom_text(
+      data  = dat_text_dom,
+      mapping = aes(x = 0.12, y = 0.3, label = label),
+      fontface = 'bold'
+    ) + 
+    guides(colour=guide_legend(title=NULL,
+                               override.aes = list(linewidth = 0.3),
+                               family = 'Arial'),
+           shape=guide_legend(title=NULL,
+                              family = 'Arial')) +
+    facet_wrap(~select_std,
+               labeller=as_labeller(c("top30"="Top30",
+                                      "top40"="Top40",
+                                      "top30_early_suc" = "Top30_early_succession")),
+               nrow = 3, ncol = 1)+
+    theme_for_coe_plot() + 
+    theme(legend.position = "none")
+  )
+
+
+###### Fig. S2 #########
+library(cowplot)
+
+Fig.S2 = ggdraw() +
+  draw_plot(Fig.S2_compare_domin_original, 0.5, 0, 0.47, .98) +
+  draw_plot(Fig.S2_compare_estab_original, 0.06, 0, 0.47, .98) +
+  draw_plot_label(c("(a)", "(b)"),
+                  c(0.098, 0.536),
+                  c(0.97, 0.97)
+                  ,size = 12
+  )
+emf('results/figures_sameages_top50/all_species_d/Fig.S2.emf',
+    width = 20, height = 25, coordDPI = 1200, 
+    emfPlusFontToPath=TRUE, # setting emfPlusFontToPath=TRUE to 
+    # ensure text looks correct on the viewing system
+    units = 'cm')
+Fig.S2
+dev.off() #turn off device and finalize file

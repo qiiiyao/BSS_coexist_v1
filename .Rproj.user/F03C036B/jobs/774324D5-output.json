@@ -1,0 +1,1 @@
+[2,"Error in loadNamespace(x) : there is no package called 'learnr'\r\nCalls: .rs.sourceWithProgress ... loadNamespace -> withRestarts -> withOneRestart -> doWithOneRestart\r\nExecution halted\r\n"]

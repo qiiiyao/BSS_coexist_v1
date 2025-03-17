@@ -1,0 +1,19 @@
+"0","merged_data_3['species'] = merged_data_3['GENUS'].astype(str) + '_' + merged_data_3['EPITHET'].astype(str)
+merged_data_3.iloc[1]
+
+"
+"1","DATAID                      29
+YEARID                       1
+FIELDID                      1
+PLOTID                       1
+SPECIESID                  140
+COVER                     11.0
+STEMS                      NaN
+AGE                          1
+YEAR                      1958
+FAMILY            Brassicaceae
+GENUS                 Barbarea
+EPITHET               vulgaris
+species      Barbarea_vulgaris
+Name: 1, dtype: object
+"

@@ -1,0 +1,8 @@
+[1,"ℹ Using R 4.4.1 (lockfile was generated with R 4.2.1)\r\n"]
+[2,"This is cmdstanr version 0.8.1.9000\r\n- CmdStanR documentation and vignettes: mc-stan.org/cmdstanr\r\n- Use set_cmdstan_path() to set the path to CmdStan\r\n- Use install_cmdstan() to install CmdStan\r\n"]
+[2,"\r\n载入程序包：'dplyr'\r\n\r\nThe following objects are masked from 'package:stats':\r\n\r\n    filter, lag\r\n\r\nThe following objects are masked from 'package:base':\r\n\r\n    intersect, setdiff, setequal, union\r\n\r\n载入需要的程序包：foreach\r\n载入需要的程序包：iterators\r\n"]
+[1,"ℹ Using R 4.4.1 (lockfile was generated with R 4.2.1)\r\n"]
+[1,"ℹ Using R 4.4.1 (lockfile was generated with R 4.2.1)\r\n"]
+[1,"ℹ Using R 4.4.1 (lockfile was generated with R 4.2.1)\r\n"]
+[1,"ℹ Using R 4.4.1 (lockfile was generated with R 4.2.1)\r\n"]
+[2,"错误于{: \r\n  task 2 failed - \"length of 'dimnames' [2] not equal to array extent\"\r\nCalls: .rs.sourceWithProgress -> eval -> eval -> %dopar% -> <Anonymous>\r\n停止执行\r\n"]
