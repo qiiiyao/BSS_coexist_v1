@@ -13,7 +13,7 @@ Authorship of data: The originators of the BSS, H. Buell, M. Buell, J. Small, Sc
 
 Authorship of code: R and Stan Code was written by Qi Yao, except the Structural Equation Modeling (SEM) scripts were adapted and modified from Xu_et_al_2022_GCB.
 
-Details of R and Stan script and their function:
+Details of R and Stan script and their function stored in the code file:
 
 1.data preparation/data preparation_ages1_35_equal_interval.R - Prepares the BSS dataset for modeling. Includes filtering for the 50 focal species, formatting species cover data into population growth data, determining the invasion stage of focal species and restricting the analysis to early successional years (ages 1–35).
 
