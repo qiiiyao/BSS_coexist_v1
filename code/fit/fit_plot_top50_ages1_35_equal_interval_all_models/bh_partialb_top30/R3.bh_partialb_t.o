@@ -1,0 +1,56 @@
+Sender: LSF System <lsfadmin@c110>
+Subject: Job 79249: <R3.bh_partialb_t> in cluster <platform> Done
+
+Job <R3.bh_partialb_t> was submitted from host <login02> by user <shpli3> in cluster <platform> at Wed Nov 27 22:01:16 2024
+Job was executed on host(s) <c110>, in queue <normal>, as user <shpli3> in cluster <platform> at Wed Nov 27 22:01:39 2024
+</data/home/shpli3> was used as the home directory.
+</data/home/shpli3/R_projects/BSS_exclude_tree_raw/code/fit/fit_plot_top50_ages1_35_equal_interval_model_comparison/bh_partialb_top30> was used as the working directory.
+Started at Wed Nov 27 22:01:39 2024
+Terminated at Thu Nov 28 01:42:49 2024
+Results reported at Thu Nov 28 01:42:49 2024
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/sh -x
+#PBS -l nodes=1:ppn=20
+#PBS -N bh_partialb_top303
+#PBS -l walltime=30000:00:00       
+#PBS -m abe
+#PBS -M 1294794885@qq.com
+
+cd /data/home/shpli3/R_projects/BSS_exclude_tree_raw/code/fit/fit_plot_top50_ages1_35_equal_interval_model_comparison/bh_partialb_top30
+date
+hostname
+/data/apps/R-4.2.2/lib64/R/bin/R CMD BATCH  3.fit.r 3.fit.rout
+date
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   25162.00 sec.
+    Max Memory :                                 5107 MB
+    Average Memory :                             4421.36 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              154
+    Max Threads :                                194
+    Run time :                                   13270 sec.
+    Turnaround time :                            13293 sec.
+
+The output (if any) follows:
+
+Wed Nov 27 22:01:39 CST 2024
+c110.idm.hsdedu9.com
+Thu Nov 28 01:40:27 CST 2024
+
+
+PS:
+
+Read file <R3.bh_partialb_t.e> for stderr output of this job.
+

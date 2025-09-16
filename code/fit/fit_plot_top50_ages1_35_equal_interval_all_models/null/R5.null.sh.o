@@ -1,0 +1,168 @@
+Sender: LSF System <lsfadmin@c015>
+Subject: Job 56657: <R5.null.sh> in cluster <platform> Done
+
+Job <R5.null.sh> was submitted from host <login02> by user <shpli3> in cluster <platform> at Tue Oct 22 22:46:56 2024
+Job was executed on host(s) <c015>, in queue <normal>, as user <shpli3> in cluster <platform> at Tue Oct 22 22:48:14 2024
+</data/home/shpli3> was used as the home directory.
+</data/home/shpli3/R_projects/BSS_exclude_tree_raw/code/fit/fit_plot_top50_ages1_35_equal_interval_model_comparison/null> was used as the working directory.
+Started at Tue Oct 22 22:48:14 2024
+Terminated at Tue Oct 22 22:51:26 2024
+Results reported at Tue Oct 22 22:51:26 2024
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/sh -x
+#PBS -l nodes=1:ppn=20
+#PBS -N null5
+#PBS -l walltime=30000:00:00       
+#PBS -m abe
+#PBS -M 1294794885@qq.com
+
+cd /data/home/shpli3/R_projects/BSS_exclude_tree_raw/code/fit/fit_plot_top50_ages1_35_equal_interval_model_comparison/null
+date
+hostname
+/data/apps/R-4.2.2/lib64/R/bin/R CMD BATCH  5.fit.r 5.fit.rout
+date
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   199.00 sec.
+    Max Memory :                                 5061 MB
+    Average Memory :                             1980.31 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              66
+    Max Threads :                                106
+    Run time :                                   189 sec.
+    Turnaround time :                            270 sec.
+
+The output (if any) follows:
+
+Tue Oct 22 22:48:15 CST 2024
+c015.idm.hsdedu9.com
+Tue Oct 22 22:51:23 CST 2024
+
+
+PS:
+
+Read file <R5.null.sh.e> for stderr output of this job.
+
+Sender: LSF System <lsfadmin@c015>
+Subject: Job 56669: <R5.null.sh> in cluster <platform> Done
+
+Job <R5.null.sh> was submitted from host <login02> by user <shpli3> in cluster <platform> at Tue Oct 22 22:58:19 2024
+Job was executed on host(s) <c015>, in queue <normal>, as user <shpli3> in cluster <platform> at Tue Oct 22 22:59:37 2024
+</data/home/shpli3> was used as the home directory.
+</data/home/shpli3/R_projects/BSS_exclude_tree_raw/code/fit/fit_plot_top50_ages1_35_equal_interval_model_comparison/null> was used as the working directory.
+Started at Tue Oct 22 22:59:37 2024
+Terminated at Wed Oct 23 00:18:11 2024
+Results reported at Wed Oct 23 00:18:11 2024
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/sh -x
+#PBS -l nodes=1:ppn=20
+#PBS -N null5
+#PBS -l walltime=30000:00:00       
+#PBS -m abe
+#PBS -M 1294794885@qq.com
+
+cd /data/home/shpli3/R_projects/BSS_exclude_tree_raw/code/fit/fit_plot_top50_ages1_35_equal_interval_model_comparison/null
+date
+hostname
+/data/apps/R-4.2.2/lib64/R/bin/R CMD BATCH  5.fit.r 5.fit.rout
+date
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   11542.00 sec.
+    Max Memory :                                 5456 MB
+    Average Memory :                             4384.25 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              146
+    Max Threads :                                186
+    Run time :                                   4714 sec.
+    Turnaround time :                            4792 sec.
+
+The output (if any) follows:
+
+Tue Oct 22 22:59:38 CST 2024
+c015.idm.hsdedu9.com
+Wed Oct 23 00:15:55 CST 2024
+
+
+PS:
+
+Read file <R5.null.sh.e> for stderr output of this job.
+
+Sender: LSF System <lsfadmin@c003>
+Subject: Job 57511: <R5.null.sh> in cluster <platform> Done
+
+Job <R5.null.sh> was submitted from host <login02> by user <shpli3> in cluster <platform> at Fri Oct 25 00:59:19 2024
+Job was executed on host(s) <c003>, in queue <normal>, as user <shpli3> in cluster <platform> at Fri Oct 25 00:59:04 2024
+</data/home/shpli3> was used as the home directory.
+</data/home/shpli3/R_projects/BSS_exclude_tree_raw/code/fit/fit_plot_top50_ages1_35_equal_interval_model_comparison/null> was used as the working directory.
+Started at Fri Oct 25 00:59:04 2024
+Terminated at Fri Oct 25 01:37:11 2024
+Results reported at Fri Oct 25 01:37:11 2024
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/sh -x
+#PBS -l nodes=1:ppn=20
+#PBS -N null5
+#PBS -l walltime=30000:00:00       
+#PBS -m abe
+#PBS -M 1294794885@qq.com
+
+cd /data/home/shpli3/R_projects/BSS_exclude_tree_raw/code/fit/fit_plot_top50_ages1_35_equal_interval_model_comparison/null
+date
+hostname
+/data/apps/R-4.2.2/lib64/R/bin/R CMD BATCH  5.fit.r 5.fit.rout
+date
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   7991.00 sec.
+    Max Memory :                                 5431 MB
+    Average Memory :                             4472.96 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              126
+    Max Threads :                                166
+    Run time :                                   2287 sec.
+    Turnaround time :                            2272 sec.
+
+The output (if any) follows:
+
+Fri Oct 25 00:59:04 CST 2024
+c003.idm.hsdedu9.com
+Fri Oct 25 01:37:10 CST 2024
+
+
+PS:
+
+Read file <R5.null.sh.e> for stderr output of this job.
+

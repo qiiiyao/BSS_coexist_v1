@@ -3,6 +3,8 @@
 rm(list = ls())
 library(dplyr)
 library(data.table)
+#setwd("D:/R projects/BSS_coexist_v1")
+setwd("~/BSS_coexist_v1")
 
 ##### Data loading
 sp_cover = read.csv('data/original data/BSS_community_332.csv',
@@ -103,18 +105,33 @@ save(re_cover_ab_f1_ages1_35_equal_interval_fp,
 sp_cover_exclude_tree_f1_allages = sp_cover_exclude_tree_f1 %>% filter(fake_age %in% seq(1, 51, 1))
 
 
-###### Sum the species for field level and all level
-sp_cover_f2_field = sp_cover_f2 %>% group_by(Absolute_year,             
-                                             Year,                   
-                                             Age,  Field) %>% 
-  summarise_at(vars(Abutilon_theophrasti:Vitis_aestivalis),
-               sum, na.rm = T)
+#### For early succession 1-35 fit ####
+### Real time data
+sp_cover_f1_mean_fp = sp_cover_f1 %>%
+  filter(fake_age < 36) %>% 
+  group_by(f_p) %>% 
+  summarise_at(vars(all_of(sp_real)),
+               mean, na.rm = T)
 
-sp_cover_f2_field = split(sp_cover_f2_field, sp_cover_f2_field$Field)
+sp_racover_f1_mean_fp = cbind(f_p = sp_cover_f1_mean_fp$f_p,
+                              decostand(sp_cover_f1_mean_fp[,
+                                                            c(2:ncol(sp_cover_f1_mean_fp))],
+                                        method = 'total',
+                                        MARGIN = 1))
+sp_racover_f1_mean_fp_early_suc_1_35 = rbindlist(apply(sp_racover_f1_mean_fp, 1, function(x){
+  y = as.data.frame(cbind(x[1], sp_real, x[2:291]))
+}))
 
-sp_cover_f2_all = sp_cover_f2 %>% group_by(Age) %>% 
-  summarise_at(vars(Abutilon_theophrasti:Vitis_aestivalis),
-               sum, na.rm = T)
+colnames(sp_racover_f1_mean_fp_early_suc_1_35) = c('f_p', 'species', 'ra_m')
+sp_racover_f1_mean_fp_early_suc_1_35$f_p_species = paste(sp_racover_f1_mean_fp_early_suc_1_35$f_p,
+                                                         sp_racover_f1_mean_fp_early_suc_1_35$species,
+                                                         sep = '_')
+colnames(sp_racover_f1_mean_fp_early_suc_1_35)[3] = c('ra_m_real_t')
+sp_racover_f1_mean_fp_early_suc_1_35 = sp_racover_f1_mean_fp_early_suc_1_35 %>% relocate(f_p_species,
+                                                                                         .after = species)
+sp_racover_f1_mean_fp_early_suc_1_35$ra_m_real_t = as.numeric(sp_racover_f1_mean_fp_early_suc_1_35$ra_m_real_t)
+save(sp_racover_f1_mean_fp_early_suc_1_35,
+     file = 'code/data preparation/transformed data/sp_racover_f1_mean_fp_early_suc_1_35.rdata')
 
 
 ######## Filter top species for fit under plot/field and all field level

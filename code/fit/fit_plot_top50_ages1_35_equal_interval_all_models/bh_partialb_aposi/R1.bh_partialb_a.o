@@ -1,0 +1,112 @@
+Sender: LSF System <lsfadmin@c094>
+Subject: Job 214309: <R1.bh_partialb_a> in cluster <platform> Done
+
+Job <R1.bh_partialb_a> was submitted from host <login01> by user <shpli3> in cluster <platform> at Tue Jul 22 20:33:57 2025
+Job was executed on host(s) <c094>, in queue <normal>, as user <shpli3> in cluster <platform> at Tue Jul 22 20:33:57 2025
+</data/home/shpli3> was used as the home directory.
+</data/home/shpli3/R_projects/BSS_exclude_tree_raw/code/fit/fit_plot_top50_ages1_35_equal_interval_model_comparison/bh_partialb_aposi> was used as the working directory.
+Started at Tue Jul 22 20:33:57 2025
+Terminated at Tue Jul 22 20:39:26 2025
+Results reported at Tue Jul 22 20:39:26 2025
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/sh -x
+#PBS -l nodes=1:ppn=20
+#PBS -N bh_partialb_aposi1
+#PBS -l walltime=30000:00:00       
+#PBS -m abe
+#PBS -M 1294794885@qq.com
+
+cd /data/home/shpli3/R_projects/BSS_exclude_tree_raw/code/fit/fit_plot_top50_ages1_35_equal_interval_model_comparison/bh_partialb_aposi
+date
+hostname
+/data/apps/R-4.2.2/lib64/R/bin/R CMD BATCH  1.fit.r 1.fit.rout
+date
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   2943.00 sec.
+    Max Memory :                                 6577 MB
+    Average Memory :                             6126.67 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   7 MB
+    Max Processes :                              194
+    Max Threads :                                234
+    Run time :                                   328 sec.
+    Turnaround time :                            329 sec.
+
+The output (if any) follows:
+
+Tue Jul 22 20:33:58 CST 2025
+c094.idm.hsdedu9.com
+Tue Jul 22 20:39:24 CST 2025
+
+
+PS:
+
+Read file <R1.bh_partialb_a.e> for stderr output of this job.
+
+Sender: LSF System <lsfadmin@c111>
+Subject: Job 214395: <R1.bh_partialb_a> in cluster <platform> Done
+
+Job <R1.bh_partialb_a> was submitted from host <login01> by user <shpli3> in cluster <platform> at Tue Jul 22 21:05:38 2025
+Job was executed on host(s) <c111>, in queue <normal>, as user <shpli3> in cluster <platform> at Tue Jul 22 21:05:38 2025
+</data/home/shpli3> was used as the home directory.
+</data/home/shpli3/R_projects/BSS_exclude_tree_raw/code/fit/fit_plot_top50_ages1_35_equal_interval_model_comparison/bh_partialb_aposi> was used as the working directory.
+Started at Tue Jul 22 21:05:38 2025
+Terminated at Thu Jul 24 23:54:05 2025
+Results reported at Thu Jul 24 23:54:05 2025
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/sh -x
+#PBS -l nodes=1:ppn=20
+#PBS -N bh_partialb_aposi1
+#PBS -l walltime=30000:00:00       
+#PBS -m abe
+#PBS -M 1294794885@qq.com
+
+cd /data/home/shpli3/R_projects/BSS_exclude_tree_raw/code/fit/fit_plot_top50_ages1_35_equal_interval_model_comparison/bh_partialb_aposi
+date
+hostname
+/data/apps/R-4.2.2/lib64/R/bin/R CMD BATCH  1.fit.r 1.fit.rout
+date
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   363958.00 sec.
+    Max Memory :                                 6972 MB
+    Average Memory :                             6687.68 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   701 MB
+    Max Processes :                              194
+    Max Threads :                                234
+    Run time :                                   182906 sec.
+    Turnaround time :                            182907 sec.
+
+The output (if any) follows:
+
+Tue Jul 22 21:05:38 CST 2025
+c111.idm.hsdedu9.com
+Thu Jul 24 23:54:04 CST 2025
+
+
+PS:
+
+Read file <R1.bh_partialb_a.e> for stderr output of this job.
+

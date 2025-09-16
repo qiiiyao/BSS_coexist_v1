@@ -1,0 +1,56 @@
+Sender: LSF System <lsfadmin@c066>
+Subject: Job 56680: <R6.bh.sh> in cluster <platform> Done
+
+Job <R6.bh.sh> was submitted from host <login02> by user <shpli3> in cluster <platform> at Tue Oct 22 23:00:16 2024
+Job was executed on host(s) <c066>, in queue <normal>, as user <shpli3> in cluster <platform> at Tue Oct 22 23:00:49 2024
+</data/home/shpli3> was used as the home directory.
+</data/home/shpli3/R_projects/BSS_exclude_tree_raw/code/fit/fit_plot_top50_ages1_35_equal_interval_model_comparison/bh> was used as the working directory.
+Started at Tue Oct 22 23:00:49 2024
+Terminated at Wed Oct 23 13:21:30 2024
+Results reported at Wed Oct 23 13:21:30 2024
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/sh -x
+#PBS -l nodes=1:ppn=20
+#PBS -N bh6
+#PBS -l walltime=30000:00:00       
+#PBS -m abe
+#PBS -M 1294794885@qq.com
+
+cd /data/home/shpli3/R_projects/BSS_exclude_tree_raw/code/fit/fit_plot_top50_ages1_35_equal_interval_model_comparison/bh
+date
+hostname
+/data/apps/R-4.2.2/lib64/R/bin/R CMD BATCH  6.fit.r 6.fit.rout
+date
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   65811.00 sec.
+    Max Memory :                                 5642 MB
+    Average Memory :                             4735.76 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              194
+    Max Threads :                                234
+    Run time :                                   51641 sec.
+    Turnaround time :                            51674 sec.
+
+The output (if any) follows:
+
+Tue Oct 22 23:00:49 CST 2024
+c066.idm.hsdedu9.com
+Wed Oct 23 13:21:29 CST 2024
+
+
+PS:
+
+Read file <R6.bh.sh.e> for stderr output of this job.
+

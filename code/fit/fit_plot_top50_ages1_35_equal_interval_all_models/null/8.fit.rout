@@ -1,0 +1,138 @@
+
+R version 4.2.2 (2022-10-31) -- "Innocent and Trusting"
+Copyright (C) 2022 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> rm(list=ls())
+> 
+> # set up R environment
+> library(cmdstanr)
+This is cmdstanr version 0.6.1
+- CmdStanR documentation and vignettes: mc-stan.org/cmdstanr
+- CmdStan path: /data/home/shpli3/.cmdstan/cmdstan-2.32.0
+- CmdStan version: 2.32.0
+> options(mc.cores = parallel::detectCores(logical = F)) 
+> library(dplyr)
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+> library(parallel)
+> library(doParallel)
+Loading required package: foreach
+Loading required package: iterators
+> setwd("/data/home/shpli3/R_projects/BSS_exclude_tree_raw")
+> 
+> # Load data
+> load("/data/home/shpli3/my_pc/BSS/code/data preparation/transformed data/fit_fp_top50_ages1_35_equal_interval.RData")
+> 
+> # run model chains separately then combine then to avoid memory issues
+> stan.seed = 52
+> file = file.path('/data/home/shpli3/my_pc/BSS/code/fit/stancode/model_comprison/constrained_competition_equal_interval/Exp_r_allposi.stan')
+> mod = cmdstan_model(file
++ #, stanc_options = list("allow-undefined")
++ )
+> numer_cores = parallel::detectCores(logical = F)
+> chains = 4 # 4 chains in parallel
+> sampling = 2500
+> warmup = 1000
+> thin = 10
+> 
+> 
+> fit_save = function(x) {
++   #x = 2
++   species = sp[x]
++   fit = mod$sample(data = datalist[[x]],
++                    seed = stan.seed, 
++                    chains = chains, 
++                    parallel_chains = chains,
++                    iter_warmup = warmup,
++                    iter_sampling = sampling,
++                    refresh = 100, # print update every 100 iters
++                    thin = thin,
++                    max_treedepth = 20,
++                    adapt_delta = 0.99)
++   
++   # Raw output
++   #------------ 
++   fit$save_object(file = paste0('fit_results/plot_ages1_35_top50_equal_interval_model_comparison/null', '/posterior/',
++                                 unique(growD$f_p),'_', species, '.RDS'))
++ }
+> 
+> #--------------------------------------------------
+> # Estimate interactions with a joint NDD*RI model for t1
+> #--------------------------------------------------
+> data_t = fit_fp_top50_ages1_35_equal_interval
+> plot_list = sapply(seq(1, 480, 48), function(x){y = c(x:(x+47))})
+> names(fit_fp_top50_ages1_35_equal_interval)[plot_list[,8]]
+ [1] "7_1"  "7_10" "7_11" "7_12" "7_13" "7_14" "7_15" "7_16" "7_17" "7_18"
+[11] "7_19" "7_2"  "7_20" "7_21" "7_22" "7_23" "7_24" "7_25" "7_26" "7_27"
+[21] "7_28" "7_29" "7_3"  "7_30" "7_31" "7_32" "7_33" "7_34" "7_35" "7_36"
+[31] "7_37" "7_38" "7_39" "7_4"  "7_40" "7_41" "7_42" "7_43" "7_44" "7_45"
+[41] "7_46" "7_47" "7_48" "7_5"  "7_6"  "7_7"  "7_8"  "7_9" 
+> 
+> fitted_plots_1 = list.files('fit_results/plot_ages1_35_top50_equal_interval_model_comparison/null/summary')
+> m = regexec("[0-9]+\\_[0-9]+", fitted_plots_1)
+> fitted_plots = unlist(regmatches(fitted_plots_1, m))
+> unfitted = setdiff(names(data_t)[plot_list[,8]], fitted_plots)
+> unfitted_order = which(names(data_t) %in% unfitted)
+> 
+> for (i in unfitted_order) {
++   #i = 1
++   datalist = data_t[[i]][[3]]
++   growD = data_t[[i]][[2]]
++   unique(growD$f_p)
++   sp = colnames(growD)[10:ncol(growD)]
++   
++   {cl = makeCluster(numer_cores-2)      
++     registerDoParallel(cl)       
++     foreach(x=1:length(datalist), .packages = c('dplyr', 'cmdstanr')) %dopar% {fit_save(x)
++       }
++ 
++       # Save results 
++       summary_l = foreach(i=1:length(datalist)) %dopar% {
++         #i = 2
++       species = sp[i]
++       fit = readRDS(paste0('fit_results/plot_ages1_35_top50_equal_interval_model_comparison/null', '/posterior/',
++                      unique(growD$f_p),'_', species, '.RDS'))
++       summary = as.data.frame(fit$summary())}
++ 
++       save(summary_l, file=paste0('fit_results/plot_ages1_35_top50_equal_interval_model_comparison/null',
++                                   '/summary/','summary_',
++                                   unique(growD$f_p), '.rdata'))
++ 
++   # Extract results
++    r_trans_sp = vector()
++    r_trans_sp = foreach(i=1:length(datalist), .combine = c, .packages = c("dplyr")) %dopar% {(summary_l[[i]] %>% filter(variable == 'r'))$mean}
++    names(r_trans_sp) = sp
++ 
++    save(r_trans_sp, file=paste0('fit_results/plot_ages1_35_top50_equal_interval_model_comparison/null', '/parameters/','r_',
++                                unique(growD$f_p), '.rdata'))
++    stopCluster(cl)
++    }
++ }
+> 
+> proc.time()
+    user   system  elapsed 
+  17.066    5.547 4306.831 

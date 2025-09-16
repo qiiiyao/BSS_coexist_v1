@@ -1,0 +1,56 @@
+Sender: LSF System <lsfadmin@c170>
+Subject: Job 64275: <results_analys> in cluster <platform> Done
+
+Job <results_analys> was submitted from host <login02> by user <shpli3> in cluster <platform> at Sat Nov  2 15:33:31 2024
+Job was executed on host(s) <c170>, in queue <normal>, as user <shpli3> in cluster <platform> at Sat Nov  2 15:33:24 2024
+</data/home/shpli3> was used as the home directory.
+</data/home/shpli3/R_projects/BSS_exclude_tree_raw/code/fit/fit_plot_top50_ages1_35_equal_interval_model_comparison/bh_allb> was used as the working directory.
+Started at Sat Nov  2 15:33:24 2024
+Terminated at Sat Nov  2 17:22:48 2024
+Results reported at Sat Nov  2 17:22:48 2024
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/sh -x
+#PBS -l nodes=1:ppn=20
+#PBS -N mod_com
+#PBS -l walltime=30000:00:00       
+#PBS -m abe
+#PBS -M 1294794885@qq.com
+
+cd '/data/home/shpli3/R_projects/BSS_exclude_tree_raw/code/results analysing'
+date
+hostname
+/data/apps/R-4.2.2/lib64/R/bin/R CMD BATCH  results_analysing_fit_plot_ages1_35_top50_mod_equal_interval_comparison.R results_analysing_fit_plot_ages1_35_top50_mod_equal_interval_comparison.Rout
+date
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   4444.60 sec.
+    Max Memory :                                 461 MB
+    Average Memory :                             439.67 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   53 MB
+    Max Processes :                              4
+    Max Threads :                                6
+    Run time :                                   6564 sec.
+    Turnaround time :                            6557 sec.
+
+The output (if any) follows:
+
+Sat Nov  2 15:33:25 CST 2024
+c170.idm.hsdedu9.com
+Sat Nov  2 17:22:48 CST 2024
+
+
+PS:
+
+Read file <results_analys.e> for stderr output of this job.
+

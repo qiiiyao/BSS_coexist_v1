@@ -1,0 +1,56 @@
+Sender: LSF System <lsfadmin@c173>
+Subject: Job 64269: <R10.bh_allb.sh> in cluster <platform> Done
+
+Job <R10.bh_allb.sh> was submitted from host <login02> by user <shpli3> in cluster <platform> at Sat Nov  2 15:27:47 2024
+Job was executed on host(s) <c173>, in queue <normal>, as user <shpli3> in cluster <platform> at Sat Nov  2 15:27:40 2024
+</data/home/shpli3> was used as the home directory.
+</data/home/shpli3/R_projects/BSS_exclude_tree_raw/code/fit/fit_plot_top50_ages1_35_equal_interval_model_comparison/bh_allb> was used as the working directory.
+Started at Sat Nov  2 15:27:40 2024
+Terminated at Mon Nov  4 00:41:03 2024
+Results reported at Mon Nov  4 00:41:03 2024
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/sh -x
+#PBS -l nodes=1:ppn=20
+#PBS -N bh_allb10
+#PBS -l walltime=30000:00:00       
+#PBS -m abe
+#PBS -M 1294794885@qq.com
+
+cd /data/home/shpli3/R_projects/BSS_exclude_tree_raw/code/fit/fit_plot_top50_ages1_35_equal_interval_model_comparison/bh_allb
+date
+hostname
+/data/apps/R-4.2.2/lib64/R/bin/R CMD BATCH  10.fit.r 10.fit.rout
+date
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   236104.00 sec.
+    Max Memory :                                 5819 MB
+    Average Memory :                             5415.09 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              194
+    Max Threads :                                234
+    Run time :                                   119603 sec.
+    Turnaround time :                            119596 sec.
+
+The output (if any) follows:
+
+Sat Nov  2 15:27:40 CST 2024
+c173.idm.hsdedu9.com
+Mon Nov  4 00:38:42 CST 2024
+
+
+PS:
+
+Read file <R10.bh_allb.sh.e> for stderr output of this job.
+

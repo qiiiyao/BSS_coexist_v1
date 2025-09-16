@@ -52,17 +52,73 @@ theme_regular = function(x){
                                unit = "cm"))
 }
 
+
+theme_regular_1 = function(x){
+    theme(text = element_text(family = 'Arial', face = "plain", 
+                              colour = "black", size = 16, lineheight = 0.9, 
+                              hjust = 0.5, vjust = 0.5, angle = 0, margin = margin(), 
+                              debug = FALSE),
+          legend.position = 'None',
+          legend.background = element_blank(),
+          legend.key = element_blank(),
+          axis.ticks = element_line(colour = "#93785B", linewidth = 0.6),
+          axis.text = element_text(size = 14, 
+            colour = "black"),
+          axis.title = element_text(size = 14, 
+            colour = "black"),
+          axis.title.x = element_text(margin = margin(t = 0.3, r = 0,
+                                                      b = 0, l = 0,
+                                                      unit = "cm")),
+          axis.title.y = element_text(margin = margin(t = 0, r = 0.3,
+                                                      b = 0, l = 0,
+                                                      unit = "cm")),
+          plot.margin = margin(t = 0.2, r = 0.2, b = 0.5, l = 0.2, 
+                               unit = "cm"))
+}
+
+
+
+theme_regular_2 = function(x){
+  ggplot2::theme_test() + 
+    theme(text = element_text(family = 'Arial', face = "plain", 
+                              colour = "black", size = 14, lineheight = 0.9, 
+                              hjust = 0.5, vjust = 0.5, angle = 0, margin = margin(), 
+                              debug = FALSE),
+          legend.position = 'None',
+          legend.background = element_blank(),
+          panel.border = element_rect(color = "#93785B",
+                                      fill = NA,
+                                      linewidth = 1),
+          rect = element_rect(fill = "white", 
+                              colour = "black", linewidth = 2.5, linetype = 1),
+          legend.key = element_blank(),
+          axis.ticks = element_line(colour = "#93785B", linewidth = 0.6),
+          axis.text = element_text(#size = rel(1), 
+                                   colour = "black"),
+          axis.title = element_text(#size = 15, 
+                                    colour = "black"),
+          axis.title.x = element_text(margin = margin(t = 0.3, r = 0,
+                                                      b = 0, l = 0,
+                                                      unit = "cm")),
+          axis.title.y = element_text(margin = margin(t = 0, r = 0.3,
+                                                      b = 0, l = 0,
+                                                      unit = "cm")),
+          plot.margin = margin(t = 0.2, r = 0.2, b = 0.5, l = 0.2, 
+                               unit = "cm"))
+}
+
 theme_for_sem = function(x){
     theme(legend.position = 'None',
           legend.background = element_blank(),
           rect = element_rect(fill = "white", 
                               colour = "black", linewidth = 2.5, linetype = 1),
           legend.key = element_blank(),
-          axis.ticks = element_line(colour = "black", linewidth = 0.8),
+          #axis.ticks = element_line(colour = "black", linewidth = 0.8),
           axis.text = element_text(size = rel(0.7), 
                                    colour = "black"),
           axis.title=element_blank(),
-          strip.text=element_text(face="bold"),
+          strip.text=element_text(face="plain", 
+                                  colour = "black"),
           plot.margin=unit(c(0.4,0.4,0.2,-0.2),units="lines"))
 }
 

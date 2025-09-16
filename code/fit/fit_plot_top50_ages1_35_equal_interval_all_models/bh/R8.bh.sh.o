@@ -1,0 +1,112 @@
+Sender: LSF System <lsfadmin@c066>
+Subject: Job 56682: <R8.bh.sh> in cluster <platform> Done
+
+Job <R8.bh.sh> was submitted from host <login02> by user <shpli3> in cluster <platform> at Tue Oct 22 23:00:17 2024
+Job was executed on host(s) <c066>, in queue <normal>, as user <shpli3> in cluster <platform> at Tue Oct 22 23:00:49 2024
+</data/home/shpli3> was used as the home directory.
+</data/home/shpli3/R_projects/BSS_exclude_tree_raw/code/fit/fit_plot_top50_ages1_35_equal_interval_model_comparison/bh> was used as the working directory.
+Started at Tue Oct 22 23:00:49 2024
+Terminated at Tue Oct 22 23:02:01 2024
+Results reported at Tue Oct 22 23:02:01 2024
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/sh -x
+#PBS -l nodes=1:ppn=20
+#PBS -N bh8
+#PBS -l walltime=30000:00:00       
+#PBS -m abe
+#PBS -M 1294794885@qq.com
+
+cd /data/home/shpli3/R_projects/BSS_exclude_tree_raw/code/fit/fit_plot_top50_ages1_35_equal_interval_model_comparison/bh
+date
+hostname
+/data/apps/R-4.2.2/lib64/R/bin/R CMD BATCH  8.fit.r 8.fit.rout
+date
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   21.78 sec.
+    Max Memory :                                 1086 MB
+    Average Memory :                             292.77 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              7
+    Max Threads :                                9
+    Run time :                                   72 sec.
+    Turnaround time :                            104 sec.
+
+The output (if any) follows:
+
+Tue Oct 22 23:00:49 CST 2024
+c066.idm.hsdedu9.com
+Tue Oct 22 23:02:01 CST 2024
+
+
+PS:
+
+Read file <R8.bh.sh.e> for stderr output of this job.
+
+Sender: LSF System <lsfadmin@c019>
+Subject: Job 56699: <R8.bh.sh> in cluster <platform> Done
+
+Job <R8.bh.sh> was submitted from host <login02> by user <shpli3> in cluster <platform> at Tue Oct 22 23:04:34 2024
+Job was executed on host(s) <c019>, in queue <normal>, as user <shpli3> in cluster <platform> at Tue Oct 22 23:06:37 2024
+</data/home/shpli3> was used as the home directory.
+</data/home/shpli3/R_projects/BSS_exclude_tree_raw/code/fit/fit_plot_top50_ages1_35_equal_interval_model_comparison/bh> was used as the working directory.
+Started at Tue Oct 22 23:06:37 2024
+Terminated at Wed Oct 23 11:51:13 2024
+Results reported at Wed Oct 23 11:51:13 2024
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/sh -x
+#PBS -l nodes=1:ppn=20
+#PBS -N bh8
+#PBS -l walltime=30000:00:00       
+#PBS -m abe
+#PBS -M 1294794885@qq.com
+
+cd /data/home/shpli3/R_projects/BSS_exclude_tree_raw/code/fit/fit_plot_top50_ages1_35_equal_interval_model_comparison/bh
+date
+hostname
+/data/apps/R-4.2.2/lib64/R/bin/R CMD BATCH  8.fit.r 8.fit.rout
+date
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   49768.00 sec.
+    Max Memory :                                 5507 MB
+    Average Memory :                             4634.67 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              182
+    Max Threads :                                222
+    Run time :                                   45875 sec.
+    Turnaround time :                            45999 sec.
+
+The output (if any) follows:
+
+Tue Oct 22 23:06:37 CST 2024
+c019.idm.hsdedu9.com
+Wed Oct 23 11:51:12 CST 2024
+
+
+PS:
+
+Read file <R8.bh.sh.e> for stderr output of this job.
+

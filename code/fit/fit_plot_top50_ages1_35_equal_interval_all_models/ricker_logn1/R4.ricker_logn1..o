@@ -1,0 +1,56 @@
+Sender: LSF System <lsfadmin@c116>
+Subject: Job 231555: <R4.ricker_logn1.> in cluster <platform> Done
+
+Job <R4.ricker_logn1.> was submitted from host <login01> by user <shpli3> in cluster <platform> at Fri Aug  8 14:16:48 2025
+Job was executed on host(s) <c116>, in queue <normal>, as user <shpli3> in cluster <platform> at Fri Aug  8 14:16:48 2025
+</data/home/shpli3> was used as the home directory.
+</data/home/shpli3/R_projects/BSS_exclude_tree_raw/code/fit/fit_plot_top50_ages1_35_equal_interval_model_comparison/ricker_logn1> was used as the working directory.
+Started at Fri Aug  8 14:16:48 2025
+Terminated at Fri Aug  8 21:30:46 2025
+Results reported at Fri Aug  8 21:30:46 2025
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/sh -x
+#PBS -l nodes=1:ppn=20
+#PBS -N ricker_logn14
+#PBS -l walltime=30000:00:00       
+#PBS -m abe
+#PBS -M 1294794885@qq.com
+
+cd /data/home/shpli3/R_projects/BSS_exclude_tree_raw/code/fit/fit_plot_top50_ages1_35_equal_interval_model_comparison/ricker_logn1
+date
+hostname
+/data/apps/R-4.2.2/lib64/R/bin/R CMD BATCH  4.fit.r 4.fit.rout
+date
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   87181.00 sec.
+    Max Memory :                                 5723 MB
+    Average Memory :                             4893.26 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              189
+    Max Threads :                                229
+    Run time :                                   26039 sec.
+    Turnaround time :                            26038 sec.
+
+The output (if any) follows:
+
+Fri Aug  8 14:16:48 CST 2025
+c116.idm.hsdedu9.com
+Fri Aug  8 21:30:46 CST 2025
+
+
+PS:
+
+Read file <R4.ricker_logn1..e> for stderr output of this job.
+

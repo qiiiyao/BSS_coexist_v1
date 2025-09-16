@@ -1,0 +1,56 @@
+Sender: LSF System <lsfadmin@c008>
+Subject: Job 57518: <R9.ricker_logn.s> in cluster <platform> Done
+
+Job <R9.ricker_logn.s> was submitted from host <login02> by user <shpli3> in cluster <platform> at Fri Oct 25 01:01:47 2024
+Job was executed on host(s) <c008>, in queue <normal>, as user <shpli3> in cluster <platform> at Fri Oct 25 01:01:29 2024
+</data/home/shpli3> was used as the home directory.
+</data/home/shpli3/R_projects/BSS_exclude_tree_raw/code/fit/fit_plot_top50_ages1_35_equal_interval_model_comparison/null> was used as the working directory.
+Started at Fri Oct 25 01:01:29 2024
+Terminated at Fri Oct 25 05:15:14 2024
+Results reported at Fri Oct 25 05:15:14 2024
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/sh -x
+#PBS -l nodes=1:ppn=20
+#PBS -N ricker_logn9
+#PBS -l walltime=30000:00:00       
+#PBS -m abe
+#PBS -M 1294794885@qq.com
+
+cd /data/home/shpli3/R_projects/BSS_exclude_tree_raw/code/fit/fit_plot_top50_ages1_35_equal_interval_model_comparison/ricker_logn
+date
+hostname
+/data/apps/R-4.2.2/lib64/R/bin/R CMD BATCH  9.fit.r 9.fit.rout
+date
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   70937.00 sec.
+    Max Memory :                                 5612 MB
+    Average Memory :                             4941.58 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   50 MB
+    Max Processes :                              188
+    Max Threads :                                228
+    Run time :                                   15224 sec.
+    Turnaround time :                            15207 sec.
+
+The output (if any) follows:
+
+Fri Oct 25 01:01:30 CST 2024
+c008.idm.hsdedu9.com
+Fri Oct 25 05:15:13 CST 2024
+
+
+PS:
+
+Read file <R9.ricker_logn.s.e> for stderr output of this job.
+
