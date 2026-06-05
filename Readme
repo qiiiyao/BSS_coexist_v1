@@ -3,7 +3,7 @@ Project for the article entitled
 by
 Qi Yao, Scott J. Meiners, Yuanzhi Li,  Yanhao Feng, Chengjin Chu and Shao-peng Li
 Published in 
-"Yao et al (2025), Buchel9844/: Initial release (v0.1). Zenodo. DOI: 10.5281/zenodo.13459947"
+"Yao et al (2025), qiiiyao/BSS_coexist_v1: Initial release (v1.1). Zenodo. DOI: doi.org/10.5281/zenodo.10679555"
 
 Contact details: Qi yao (qiyao.eco@gmail.com) and Shao-peng Li (spli@des.ecnu.edu.cn)
 
@@ -13,7 +13,7 @@ Authorship of data: The originators of the BSS, H. Buell, M. Buell, J. Small, Sc
 
 Authorship of code: R and Stan Code was written by Qi Yao, except the Structural Equation Modeling (SEM) scripts were adapted and modified from Xu_et_al_2022_GCB.
 
-Details of R and Stan script and their function:
+Details of R and Stan script and their function stored in the code file:
 
 1.data preparation/data preparation_ages1_35_equal_interval.R - Prepares the BSS dataset for modeling. Includes filtering for the 50 focal species, formatting species cover data into population growth data, determining the invasion stage of focal species and restricting the analysis to early successional years (ages 1–35).
 
