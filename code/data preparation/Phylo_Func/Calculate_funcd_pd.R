@@ -6,7 +6,10 @@ library(tidyr)
 library(doParallel)
 library(parallel)
 
+setwd("D:/R projects/BSS_coexist")
+
 ### Calculate the original functional distance
+load('results/fit_results/plot_ages1_35_top50_equal_interval_model_comparison/bh_partialb/inter_all_c_alltime.rdata')
 tree = read.tree('data/original data/phylo_tree332.txt')
 #tree_li_2015 = read.table('D:/????????????/DNH_BSS/0312EL_Darwin/20150312/invader1year_native20year/MPDab_20years.txt', 
 #                         header = T)
@@ -31,6 +34,9 @@ field = read.csv('data/original data/FIELDS.csv',
 trait_1 = read.csv('data/original data/traits332.csv',
                    header = T)
 trait = trait_1[-nrow(trait_1),]
+colnames(trait_1)
+
+
 #trait_supp = read.csv('data/original data/traits332_supp.csv',
 #                      header = T)
 trait = arrange(trait, trait$species_id)
@@ -47,10 +53,18 @@ for (i in 1:length(sp)) {
 
 colnames(sp_cover)[8:ncol(sp_cover)] = sp_real # change the species name of data
 
+trait_noloss = trait_1 %>% filter(!is.na(Height..m.) &  !is.na(LDMC..g.g.) &
+                                    !is.na(SLA..cm2.g.) & !is.na(Seedmass..g.1000.seeds.))
+
+select_sps = sort(unique(inter_all_c_alltime$species_i))
+setdiff(select_sps, trait_noloss$Species) 
+# all selected species have real trait values, do not need do imputation!
+setdiff(trait_noloss$Species, select_sps)
+trait_selected = trait_1 %>% filter(Species %in% select_sps) %>% arrange(Species)
 
 #### Functional distance for BSS
-trait.conti = as.matrix(trait[,12:ncol(trait)])
-trait.cate = as.matrix(trait[,7:11])
+trait.conti = as.matrix(trait_selected[,12:ncol(trait)])
+trait.cate = as.matrix(trait_selected[,7:11])
 
 hist(trait.conti[,1])
 hist(trait.conti[,2])
@@ -70,8 +84,7 @@ colnames(trait.conti.2)[c(1,3,4)] = c('log(Height..m.)',
                                       'log(Seedmass..g.1000.seeds.)')
 str(trait.conti.2)
 trait.conti.2 = apply(trait.conti.2, 2, function(x){as.numeric(x)})
-trait.conti.2.scaled = apply(trait.conti.2, 2, 
-                             scale)
+trait.conti.2.scaled = apply(trait.conti.2, 2, scale)
 
 #### Check the covary trends among different traits
 library(PerformanceAnalytics)
@@ -79,42 +92,29 @@ chart.Correlation(trait.conti.2.scaled, histogram=TRUE, pch=19)
 ##  the max correlation effect is 0.68, which indicates there is little reduncy among
 ## different traits
 
-### Impute the miss values
-library(Rphylopars)
-
-pre = phylopars(trait_data = cbind(species = trait$Species,
-                                   as_tibble(trait.conti.2.scaled)),
-                tree = tree,
-                pheno_error = TRUE,
-                phylo_correlated = TRUE,
-                pheno_correlated = TRUE)
-trait.conti.2_fake = cbind(species = row.names(pre$anc_recon)[1:nrow(trait.conti.2.scaled)]
-  ,as_tibble(pre$anc_recon[1:nrow(trait.conti.2.scaled),])) %>% 
-  arrange(species)
-
-pc.dist.mat = as.matrix(dist(trait.conti.2_fake[,2:ncol(trait.conti.2_fake)],
+fd.conti.mat = as.matrix(dist(trait.conti.2.scaled,
                              method = 'euclidean'))
-colnames(pc.dist.mat) = trait.conti.2_fake$species
-row.names(pc.dist.mat) = trait.conti.2_fake$species
+colnames(fd.conti.mat) = trait_selected$Species
+rownames(fd.conti.mat) = trait_selected$Species
 
-save(pc.dist.mat, file = 'code/Phylo_Func/pc.dist.mat.rdata')
+save(fd.conti.mat, file = 'code/data preparation/Phylo_Func/fd.conti.mat.rdata')
 
-pc_dist_dat = as.data.frame(pc.dist.mat) %>% 
-  mutate(species_i = rownames(pc.dist.mat),
-         .before = 'Abutilon_theophrasti') %>%
+fd_conti_dat = as.data.frame(fd.conti.mat) %>% 
+  mutate(species_i = rownames(fd.conti.mat),
+         .before = 'Acalypha_rhomboidea') %>%
   pivot_longer(!species_i,
                names_to = "species_j",
                values_to = "dist")
 
-pc_dist_dat$sp_pair = paste(pc_dist_dat$species_i,
-                            pc_dist_dat$species_j,
+fd_conti_dat$sp_pair = paste(fd_conti_dat$species_i,
+                            fd_conti_dat$species_j,
                             sep = '_')
 
 
 # Calculate Gower distance for all traits
 library(FD)
 library(tidyr)
-trait_mat = trait[,7:ncol(trait)]
+trait_mat = trait_selected[,7:ncol(trait_selected)]
 trait_mat$Growth = as.factor(trait_mat$Growth)
 trait_mat$Span = as.factor(trait_mat$Span)
 trait_mat$Pollination = as.factor(trait_mat$Pollination)
@@ -124,14 +124,14 @@ trait_mat$Height..m. = as.numeric(trait_mat$Height..m.)
 trait_mat$LDMC..g.g. = as.numeric(trait_mat$LDMC..g.g.)
 trait_mat$SLA..cm2.g. = as.numeric(trait_mat$SLA..cm2.g.)
 trait_mat$Seedmass..g.1000.seeds. = as.numeric(trait_mat$Seedmass..g.1000.seeds.)
-rownames(trait_mat) = trait$Species
+rownames(trait_mat) = trait_selected$Species
 
 fd_gower_mat = as.matrix(gowdis(trait_mat))
-save(fd_gower_mat, file = 'code/Phylo_Func/fd_gower_mat.rdata')
+save(fd_gower_mat, file = 'code/data preparation/Phylo_Func/fd_gower_mat.rdata')
 
 fd_gower_dat = as.data.frame(fd_gower_mat) %>% 
   mutate(species_i = rownames(fd_gower_mat),
-         .before = 'Abutilon_theophrasti') %>%
+         .before = 'Acalypha_rhomboidea') %>%
   pivot_longer(!species_i,
                names_to = "species_j",
                values_to = "Gower_dis")
@@ -145,7 +145,7 @@ fd_gower_dat$sp_pair = paste(fd_gower_dat$species_i,
 # Calculate single traits distance
 library(FD)
 library(tidyr)
-trait_mat = trait[,7:ncol(trait)]
+trait_mat = trait_selected[,7:ncol(trait_selected)]
 trait_mat$Growth = as.factor(trait_mat$Growth)
 trait_mat$Span = as.factor(trait_mat$Span)
 trait_mat$Pollination = as.factor(trait_mat$Pollination)
@@ -155,35 +155,35 @@ trait_mat$Height..m. = as.numeric(trait_mat$Height..m.)
 trait_mat$LDMC..g.g. = as.numeric(trait_mat$LDMC..g.g.)
 trait_mat$SLA..cm2.g. = as.numeric(trait_mat$SLA..cm2.g.)
 trait_mat$Seedmass..g.1000.seeds. = as.numeric(trait_mat$Seedmass..g.1000.seeds.)
-rownames(trait_mat) = trait$Species
+rownames(trait_mat) = trait_selected$Species
 
 fd_mat_growth = as.matrix(gowdis(as.data.frame(trait_mat$Growth)))
-rownames(fd_mat_growth) = trait$Species
-colnames(fd_mat_growth) = trait$Species
+rownames(fd_mat_growth) = trait_selected$Species
+colnames(fd_mat_growth) = trait_selected$Species
 fd_mat_span = as.matrix(gowdis(as.data.frame(trait_mat$Span)))
-rownames(fd_mat_span) = trait$Species
-colnames(fd_mat_span) = trait$Species
+rownames(fd_mat_span) = trait_selected$Species
+colnames(fd_mat_span) = trait_selected$Species
 fd_mat_pollination = as.matrix(gowdis(as.data.frame(trait_mat$Pollination)))
-rownames(fd_mat_pollination) = trait$Species
-colnames(fd_mat_pollination) = trait$Species
+rownames(fd_mat_pollination) = trait_selected$Species
+colnames(fd_mat_pollination) = trait_selected$Species
 fd_mat_dispersal = as.matrix(gowdis(as.data.frame(trait_mat$Dispersal)))
-rownames(fd_mat_dispersal) = trait$Species
-colnames(fd_mat_dispersal) = trait$Species
+rownames(fd_mat_dispersal) = trait_selected$Species
+colnames(fd_mat_dispersal) = trait_selected$Species
 fd_mat_clonality = as.matrix(gowdis(as.data.frame(trait_mat$Clonality)))
-rownames(fd_mat_clonality) = trait$Species
-colnames(fd_mat_clonality) = trait$Species
+rownames(fd_mat_clonality) = trait_selected$Species
+colnames(fd_mat_clonality) = trait_selected$Species
 fd_mat_height = as.matrix(gowdis(as.data.frame(trait_mat$Height..m.)))
-rownames(fd_mat_height) = trait$Species
-colnames(fd_mat_height) = trait$Species
+rownames(fd_mat_height) = trait_selected$Species
+colnames(fd_mat_height) = trait_selected$Species
 fd_mat_ldmc = as.matrix(gowdis(as.data.frame(trait_mat$LDMC..g.g.)))
-rownames(fd_mat_ldmc) = trait$Species
-colnames(fd_mat_ldmc) = trait$Species
+rownames(fd_mat_ldmc) = trait_selected$Species
+colnames(fd_mat_ldmc) = trait_selected$Species
 fd_mat_sla = as.matrix(gowdis(as.data.frame(trait_mat$SLA..cm2.g.)))
-rownames(fd_mat_sla) = trait$Species
-colnames(fd_mat_sla) = trait$Species
+rownames(fd_mat_sla) = trait_selected$Species
+colnames(fd_mat_sla) = trait_selected$Species
 fd_mat_seedmass = as.matrix(gowdis(as.data.frame(trait_mat$Seedmass..g.1000.seeds.)))
-rownames(fd_mat_seedmass) = trait$Species
-colnames(fd_mat_seedmass) = trait$Species
+rownames(fd_mat_seedmass) = trait_selected$Species
+colnames(fd_mat_seedmass) = trait_selected$Species
 
 fd_mat_list = list(fd_mat_growth, fd_mat_span, fd_mat_pollination,
                    fd_mat_dispersal, fd_mat_clonality, fd_mat_height,
@@ -212,7 +212,7 @@ fd_dat_single$sp_pair = paste(fd_dat_single$species_i,
                               sep = '_')
 fd_dat_single = fd_dat_single %>% relocate('sp_pair', .after = 'species_j')
 
-fd_dat_all = fd_dat_single %>% left_join(pc_dist_dat[,c('dist', 'sp_pair')],
+fd_dat_all = fd_dat_single %>% left_join(fd_conti_dat[,c('dist', 'sp_pair')],
                                          by = 'sp_pair') %>% 
   left_join(fd_gower_dat[,c('Gower_dis', 'sp_pair')],
             by = 'sp_pair') %>% 
@@ -220,7 +220,7 @@ fd_dat_all = fd_dat_single %>% left_join(pc_dist_dat[,c('dist', 'sp_pair')],
   rename(Multi_traits = Gower_dis)
 
 #### Save the pd fd
-save(pd_dat, file = 'code/Phylo_Func/pd.rdata')
-save(fd_dat_all, file = 'code/Phylo_Func/fd_dat_all.rdata')
+save(pd_dat, file = 'code/data preparation/Phylo_Func/pd.rdata')
+save(fd_dat_all, file = 'code/data preparation/Phylo_Func/fd_dat_all.rdata')
 
 
